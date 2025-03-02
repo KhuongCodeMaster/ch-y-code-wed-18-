@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông Tin Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #1e1e2f, #23232d);
+            color: #e0e0e0;
+        }
+
+        .navbar {
+            background: #007BFF;
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .hamburger {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .hamburger.active {
+            transform: rotate(90deg);
+        }
+
+        .hamburger span {
+            background: white;
+            height: 3px;
+            width: 25px;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .menu-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 10px;
+            background: #333;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .dropdown a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            transition: background 0.3s ease;
+        }
+
+        .dropdown a:hover {
+            background: #444;
+        }
+
+        .language-icon-container {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .language-icon-container:hover {
+            background: #555;
+            color: #ff6600;
+        }
+
+        .language-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .language-menu {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 10px;
+            background: #333;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            z-index: 100;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .language-menu.show {
+            display: block;
+        }
+
+        .language-menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            transition: background 0.3s ease;
+        }
+
+        .language-menu a:hover {
+            background: #444;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        thuvienanh {
+            text-align: center;
+            color: #9400D3;
+            font-size: 22px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        .highlight {
+            color: #00ccff;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .highlight:hover {
+            color: #ff6600;
+            text-shadow: 0px 0px 10px #ff6600;
+        }
+
+        .intro-img {
+            display: block;
+            max-width: 100%;
+            margin: 20px auto;
+            border-radius: 10px;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .thumbnail {
+            position: relative;
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .thumbnail:hover img {
+            transform: scale(1.1);
+        }
+
+        .download {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .download a {
+            color: #ff6600;
+            font-size: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            border: 2px solid #ff6600;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .download a:hover {
+            background: #ff6600;
+            color: #fff;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 80%;
+            border-radius: 10px;
+        }
+
+        .close, .prev, .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 50%;
+        }
+
+        .close {
+            top: 20px;
+            right: 20px;
+            transform: none;
+        }
+
+        .prev {
+            left: 10px;
+        }
+
+        .next {
+            right: 10px;
+        }
+
+        .close:hover, .prev:hover, .next:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Hide English description by default */
+        .description-en {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Thanh điều hướng -->
+    <div class="navbar">
+        <div class="menu-container">
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <span class="menu-title" id="nav-title">Menu</span>
+        </div>
+        <div class="dropdown" id="menuDropdown">
+            <a href="register.html" id="register-link">Register</a>
+            <a href="login.html" id="login-link">Login</a>
+            <a href="#" onclick="logout()" id="logout-link">Logout</a>
+        </div>
+        <div class="language-select">
+            <div class="language-icon-container" onclick="toggleLanguageMenu()">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/globe.png" alt="Language" class="language-icon">
+            </div>
+            <div class="language-menu" id="languageMenu">
+                <a href="#" onclick="setLanguage('vi')">Tiếng Việt</a>
+                <a href="#" onclick="setLanguage('en')">English</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nội dung chính -->
+    <div class="container">
+        <span class="highlight" style="color: bank; font-size: 24px;" id="game-title">Eliza's Secret Potion</span>
+
+        <img class="intro-img" id="intro-img" src="https://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKmainVN.jpg" alt="Ảnh Intro Game">
+
+        <div style="text-align: center;">
+            <span style="color: crimson; font-size: 24px;" id="description-title">Mô Tả:</span>
+        </div>
+
+        <!-- Vietnamese Description -->
+        <div class="description-vi">
+<p><span class="highlight">War Demon Kirstin</span> là tựa game 18+ đầy mê hoặc, kết hợp hành động mãnh liệt với sự quyến rũ táo bạo. Bạn sẽ hóa thân thành Kirstin, một <span class="highlight">nữ chiến binh ác quỷ</span> mạnh mẽ, bước vào thế giới u tối, nơi mỗi trận chiến là thử thách cả về sức mạnh lẫn lòng can đảm.</p>  <p>Đây không chỉ là một cuộc chiến đơn thuần mà còn là hành trình khám phá những bí mật nóng bỏng, nơi dục vọng và bóng tối hòa quyện. Trò chơi mở ra những tình tiết <span class="highlight">18+</span> đầy bất ngờ khi bạn tương tác với các nhân vật phụ, mỗi người đều mang trong mình nét quyến rũ và bí ẩn riêng biệt.</p>  <p>Hệ thống chiến đấu <span class="highlight">đỉnh cao</span> cho phép bạn thực hiện các combo mạnh mẽ, tận hưởng cảm giác quyền lực bùng nổ. Cốt truyện đa chiều dẫn dắt bạn khám phá những ngóc ngách sâu thẳm của thế giới Kirstin, nơi mọi lựa chọn của bạn đều có thể mở khóa những cảnh <span class="highlight">quyến rũ</span> độc nhất vô nhị.</p>  <p><span class="highlight">War Demon Kirstin</span> không dành cho người dưới 18 tuổi. Đây là nơi mà hành động, bóng tối và đam mê cùng thống trị, mang đến một trải nghiệm mà bạn không thể nào quên. Nếu bạn đủ dũng cảm để bước vào, hãy chuẩn bị tinh thần cho một thế giới đầy cám dỗ.</p><p><strong>🔥 Bấm Tải Game ngay để khám phá thế giới của Kirstin, nơi dục vọng và sức mạnh hòa làm một!</strong><p><span class="highlight">Thể Loại:</span> Hành động, Phiêu lưu, Quyến rũ, Kinh dị, Thế giới mở, Tình cảm, Bạo lực, Giả tưởng, Tâm lý, Nhập vai, Khám phá, Thần thoại, Sinh tồn, Lựa chọn đạo đức, Nhiệm vụ tuyến tính, Lãng mạn, Ma thuật, Săn quái vật, Chiến thuật, Cốt truyện đen tối.</p>
+      <p><strong>Nhà Phát Triển Game: </strong><span class="highlight">Captain Sikorsky</span></p>
+        <p><strong>Ngôn Ngữ:</strong> <span class="highlight">Tiếng Anh (Chưa Hoàn Thành Mod Tiếng Việt)</span></p>
+        </div>
+
+        <!-- English Description -->
+        <div class="description-en">
+<p><span class="highlight">War Demon Kirstin</span> is an enthralling 18+ game that blends intense action with bold seduction. You will step into the shoes of Kirstin, a powerful <span class="highlight">demonic warrior</span>, venturing into a dark world where every battle tests both your strength and courage.</p><p>This is not just a mere war—it’s a journey of uncovering tantalizing secrets, where desire and darkness intertwine. The game unveils <span class="highlight">18+</span> unexpected moments as you interact with various side characters, each possessing their own unique charm and mystery.</p><p>The <span class="highlight">top-tier</span> combat system allows you to unleash devastating combos, experiencing the raw thrill of power. A multi-layered storyline leads you deep into Kirstin’s world, where every choice you make can unlock exclusive <span class="highlight">seductive</span> scenes.</p><p><span class="highlight">War Demon Kirstin</span> is not for those under 18. This is a realm where action, darkness, and passion reign supreme, delivering an unforgettable experience. If you dare to enter, prepare yourself for a world of irresistible temptation.</p><p><strong>🔥 Download Now to explore Kirstin’s world, where desire and power become one!</strong></p>
+<p><strong>Game Developer: </strong><span class="highlight">Captain Sikorsky</span></p><p><span class="highlight">Genres:</span> Action, Adventure, Seduction, Horror, Open World, Romance, Violence, Fantasy, Psychological, RPG, Exploration, Mythology, Survival, Moral Choices, Linear Quests, Dark Narrative, Magic, Monster Hunting, Strategy.</p> 
+       <p><strong>Game Language:</strong> <span class="highlight" id="language">English</span></p>
+        </div>
+
+        <thuvienanh id="gallery-title">Ảnh:</thuvienanh>
+        <div class="gallery">
+            <div class="thumbnail"><img id="gallery-img-1" src="https://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKvn1.jpg" alt="Ảnh 1"></div>
+            <div class="thumbnail"><img id="gallery-img-2" src="https://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKvn2.jpg" alt="Ảnh 2"></div>
+            <div class="thumbnail"><img id="gallery-img-3" src="https://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKvn3.jpg" alt="Ảnh 3"></div>
+            <div class="thumbnail"><img id="gallery-img-4" src="https://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKvn4.jpg" alt="Ảnh 4"></div>
+            <div class="thumbnail"><img id="gallery-img-5" src="https://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKvn5.jpg" alt="Ảnh 5"></div>
+            <div class="thumbnail"><img id="gallery-img-6" src="khônhttps://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKvn6.jpg" alt="Ảnh 6"></div>
+           <div class="thumbnail"><img id="gallery-img-7" src="https://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKvn7.jpg" alt="Ảnh 7"></div> 
+           <div class="thumbnail"><img id="gallery-img-8" src="https://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKvn8.jpg" alt="Ảnh 8"></div>
+           <div class="thumbnail"><img id="gallery-img-9" src="https://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKvn9.jpg" alt="Ảnh 9"></div>
+        </div>
+
+        <div class="download">
+            <a href="https://pixeldrain.com/u/DrSDQVH2" target="_blank" id="download-link">Tải Game Ngay</a>
+        </div>
+    </div>
+
+    <div class="lightbox" id="lightbox">
+        <span class="close" onclick="closeLightbox()">&#10006;</span>
+        <span class="prev" onclick="prevImage()">&#10094;</span>
+        <img id="lightbox-img" src="" alt="Lightbox">
+        <span class="next" onclick="nextImage()">&#10095;</span>
+    </div>
+
+    <script>
+        const thumbnails = document.querySelectorAll('.thumbnail img');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        let currentIndex = 0;
+
+        thumbnails.forEach((thumbnail, index) => {
+            thumbnail.addEventListener('click', () => {
+                currentIndex = index;
+                openLightbox(thumbnail.src);
+            });
+        });
+
+        function openLightbox(src) {
+            lightboxImg.src = src;
+            lightbox.style.display = 'flex';
+        }
+
+        function closeLightbox() {
+            lightbox.style.display = 'none';
+        }
+
+        function prevImage() {
+            currentIndex = (currentIndex - 1 + thumbnails.length) % thumbnails.length;
+            lightboxImg.src = thumbnails[currentIndex].src;
+        }
+
+        function nextImage() {
+            currentIndex = (currentIndex + 1) % thumbnails.length;
+            lightboxImg.src = thumbnails[currentIndex].src;
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+
+        // Language data
+        const langData = {
+            en: {
+                navTitle: "Menu",
+                register: "Register",
+                login: "Login",
+                logout: "Logout",
+                language: "Language",
+                gameTitle: "War Demon Kirstin",
+                descriptionTitle: "Description:",
+                language: "English",
+                galleryTitle: "Image:",
+                downloadLink: "Download Game Now",
+                introImg: "https://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKmainEN.jpg",
+                galleryImg1: "https://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKen1.jpg",
+                galleryImg2: "https://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKen2.jpg",
+                galleryImg3: "https://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKen3.jpg",
+                galleryImg4: "https://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKen4.jpg",
+                galleryImg5: "https://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKen5.jpg",
+                galleryImg6: "https://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKen6.jpg",
+                galleryImg7: "https://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKen7.jpg",
+                galleryImg8: "https://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKen8.jpg",
+                galleryImg9: "https://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKen9.jpg"
+            },
+            vi: {
+                navTitle: "Danh Mục",
+                register: "Đăng Ký",
+                login: "Đăng Nhập",
+                logout: "Đăng Xuất",
+                language: "Ngôn Ngữ",
+                gameTitle: "Quỷ chiến tranh Kirstin",
+                descriptionTitle: "Mô Tả:",
+                language: "Tiếng Anh",
+                galleryTitle: "Ảnh",
+                downloadLink: "Tải Game Ngay",
+                introImg: "https://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKmainVN.jpg",
+                galleryImg1: "https://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKvn1.jpg",
+                galleryImg2: "https://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKvn2.jpg",
+                galleryImg3: "https://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKvn3.jpg",
+                galleryImg4: "https://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKvn4.jpg",
+                galleryImg5: "https://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKvn5.jpg",
+                galleryImg6: "https://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKvn6.jpg",
+                galleryImg7: "https://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKvn7.jpg",
+                galleryImg8: "https://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKvn8.jpg",
+                galleryImg9: "https://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKvn9.jpg"
+            }
+        };
+
+        // Apply language
+        function applyLanguage(language) {
+            const data = langData[language];
+            document.getElementById('nav-title').innerText = data.navTitle;
+            document.getElementById('register-link').innerText = data.register;
+            document.getElementById('login-link').innerText = data.login;
+            document.getElementById('logout-link').innerText = data.logout;
+            document.getElementById('game-title').innerText = data.gameTitle;
+            document.getElementById('description-title').innerText = data.descriptionTitle;
+            document.getElementById('language').innerText = data.language;
+            document.getElementById('gallery-title').innerText = data.galleryTitle;
+            document.getElementById('download-link').innerText = data.downloadLink;
+            document.getElementById('intro-img').src = data.introImg;
+            document.getElementById('gallery-img-1').src = data.galleryImg1;
+            document.getElementById('gallery-img-2').src = data.galleryImg2;
+            document.getElementById('gallery-img-3').src = data.galleryImg3;
+            document.getElementById('gallery-img-4').src = data.galleryImg4;
+            document.getElementById('gallery-img-5').src = data.galleryImg5;
+            document.getElementById('gallery-img-6').src = data.galleryImg6;
+            document.getElementById('gallery-img-7').src = data.galleryImg7;
+            document.getElementById('gallery-img-8').src = data.galleryImg8;
+            document.getElementById('gallery-img-9').src = data.galleryImg9;
+
+            // Toggle descriptions
+            if (language === 'vi') {
+                document.querySelector('.description-vi').style.display = 'block';
+                document.querySelector('.description-en').style.display = 'none';
+            } else {
+                document.querySelector('.description-vi').style.display = 'none';
+                document.querySelector('.description-en').style.display = 'block';
+            }
+
+            // Hide language menu after selection
+            document.getElementById('languageMenu').classList.remove('show');
+        }
+
+        // Set language
+        function setLanguage(language) {
+            localStorage.setItem('language', language);
+            applyLanguage(language);
+        }
+
+        // Toggle menu
+        function toggleMenu() {
+            const menu = document.getElementById('menuDropdown');
+            const hamburger = document.querySelector('.hamburger');
+            menu.classList.toggle('show');
+            hamburger.classList.toggle('active');
+        }
+
+        function toggleLanguageMenu() {
+            const languageMenu = document.getElementById('languageMenu');
+            languageMenu.classList.toggle('show');
+        }
+
+        function logout() {
+            alert("Bạn đã đăng xuất!");
+            localStorage.removeItem('language');
+            window.location.href = "index.html";
+        }
+
+        // Initialize language
+        const currentLang = localStorage.getItem('language') || 'vi';
+        applyLanguage(currentLang);
+    </script>
+</body>
+</html>

@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông Tin Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #1e1e2f, #23232d);
+            color: #e0e0e0;
+        }
+
+        .navbar {
+            background: #007BFF;
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .hamburger {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .hamburger.active {
+            transform: rotate(90deg);
+        }
+
+        .hamburger span {
+            background: white;
+            height: 3px;
+            width: 25px;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .menu-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 10px;
+            background: #333;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .dropdown a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            transition: background 0.3s ease;
+        }
+
+        .dropdown a:hover {
+            background: #444;
+        }
+
+        .language-icon-container {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .language-icon-container:hover {
+            background: #555;
+            color: #ff6600;
+        }
+
+        .language-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .language-menu {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 10px;
+            background: #333;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            z-index: 100;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .language-menu.show {
+            display: block;
+        }
+
+        .language-menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            transition: background 0.3s ease;
+        }
+
+        .language-menu a:hover {
+            background: #444;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        thuvienanh {
+            text-align: center;
+            color: #9400D3;
+            font-size: 22px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        .highlight {
+            color: #00ccff;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .highlight:hover {
+            color: #ff6600;
+            text-shadow: 0px 0px 10px #ff6600;
+        }
+
+        .intro-img {
+            display: block;
+            max-width: 100%;
+            margin: 20px auto;
+            border-radius: 10px;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .thumbnail {
+            position: relative;
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .thumbnail:hover img {
+            transform: scale(1.1);
+        }
+
+        .download {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .download a {
+            color: #ff6600;
+            font-size: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            border: 2px solid #ff6600;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .download a:hover {
+            background: #ff6600;
+            color: #fff;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 80%;
+            border-radius: 10px;
+        }
+
+        .close, .prev, .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 50%;
+        }
+
+        .close {
+            top: 20px;
+            right: 20px;
+            transform: none;
+        }
+
+        .prev {
+            left: 10px;
+        }
+
+        .next {
+            right: 10px;
+        }
+
+        .close:hover, .prev:hover, .next:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Hide English description by default */
+        .description-en {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Thanh điều hướng -->
+    <div class="navbar">
+        <div class="menu-container">
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <span class="menu-title" id="nav-title">Menu</span>
+        </div>
+        <div class="dropdown" id="menuDropdown">
+            <a href="register.html" id="register-link">Register</a>
+            <a href="login.html" id="login-link">Login</a>
+            <a href="#" onclick="logout()" id="logout-link">Logout</a>
+        </div>
+        <div class="language-select">
+            <div class="language-icon-container" onclick="toggleLanguageMenu()">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/globe.png" alt="Language" class="language-icon">
+            </div>
+            <div class="language-menu" id="languageMenu">
+                <a href="#" onclick="setLanguage('vi')">Tiếng Việt</a>
+                <a href="#" onclick="setLanguage('en')">English</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nội dung chính -->
+    <div class="container">
+        <span class="highlight" style="color: bank; font-size: 24px;" id="game-title">Eliza's Secret Potion</span>
+
+        <img class="intro-img" id="intro-img" src="https://raw.githubusercontent.com/KhuongCodeMaster/ESPchuaanh/main/Castle.png" alt="Ảnh Intro Game">
+
+        <div style="text-align: center;">
+            <span style="color: crimson; font-size: 24px;" id="description-title">Mô Tả:</span>
+        </div>
+
+        <!-- Vietnamese Description -->
+        <div class="description-vi">
+       <p><span class="highlight">🖤 KIRSTIN & PAINELLE – CUỘC GẶP GỠ ĐỊNH MỆNH</span><p>Painelle tỉnh dậy giữa một <span class="highlight">cánh rừng hoang vu</span>, không nhớ bất cứ điều gì về <span class="highlight">quá khứ</span> của mình. Cô không biết mình là ai, không biết <span class="highlight">tại sao</span> mình lại ở đây, và điều duy nhất còn sót lại trong tâm trí là một cảm giác <span class="highlight">quen thuộc kỳ lạ</span>—một cái tên: <span class="highlight">Kirstin</span>.</p><p><span class="highlight">Đó không phải là tên</span> của cô.</p><p><span class="highlight">Đó không phải là tên một nơi chốn.</span></p><p><span class="highlight">Đó là một người phụ nữ và bản năng mách bảo cô phải tìm đến người đó.</span></p><p><span class="highlight">💜 Kirstin</span> – Một <span class="highlight">người phụ nữ bí ẩn</span> với <span class="highlight">đôi mắt tím sâu thẳm</span>, nụ cười vừa <span class="highlight">Ngọt ngào </span>vừa <span class="highlight">Nguy hiểm</span>. Cô ta <span class="highlight">không giống bất kỳ ai</span> mà <span class="highlight">Painelle</span> từng gặp (hay ít nhất là những gì cô còn nhớ được).</p><p>Ngay từ <span class="highlight">khoảnh khắc đầu tiên</span> nhìn thấy <span class="highlight">Kirstin</span>, <span class="highlight">Painelle</span> cảm nhận được một <span class="highlight">thứ gì đó khác thường</span>—một <span class="highlight">sự kết nối khó giải thích</span>. Không phải là <span class="highlight">tình bạn</span>, không phải là <span class="highlight">sự thù địch</span>, mà là một thứ gì đó <span class="highlight">sâu sắc hơn</span>, <span class="highlight">tối tăm hơn</span>.</p><p><span class="highlight">"Ngươi là ai?"</span> – <span class="highlight">Painelle</span> hỏi, giọng cô <span class="highlight">run nhẹ</span> mà chính bản thân cũng không hiểu tại sao.</p><p><span class="highlight">"Ngươi biết ta là ai mà, Painelle."</span> – <span class="highlight">Kirstin</span> đáp lại, <span class="highlight">nụ cười</span> của cô ta chứa đầy <span class="highlight">sự khiêu khích</span>.</p><p>Nhưng <span class="highlight">Painelle</span> không nhớ gì cả.</p><p><span class="highlight">🔥 SỰ CÁM DỖ CỦA KIRSTIN – ÁNH SÁNG HAY BÓNG TỐI?</span></p><p><span class="highlight">Kirstin</span> không phải là một <span class="highlight">người phụ nữ bình thường</span>. Cô ta không hẳn là một <span class="highlight">kẻ thù</span>, nhưng cũng chẳng phải là một <span class="highlight">đồng minh</span>.</p><p>Cô ta <span class="highlight">đẹp đến mức nguy hiểm</span>, và mỗi lần xuất hiện, một phần trong <span class="highlight">Painelle</span> cảm thấy bị hút vào như <span class="highlight">con thiêu thân lao vào lửa</span>.</p><p>💜 "<span class="highlight">Ngươi đã quên hết mọi thứ, phải không?</span>" 💜 "<span class="highlight">Ta có thể giúp ngươi nhớ lại… nếu ngươi muốn.</span>" Nhưng cái giá phải trả là gì?</p><p>Painelle càng ở gần Kirstin, càng cảm thấy bản thân bị xoáy vào một <span class="highlight">vòng xoáy không lối thoát</span>. Cô không thể đoán được <span class="highlight">ý đồ thực sự</span> của Kirstin, nhưng mỗi lời nói, mỗi cử chỉ của cô ta đều mang một <span class="highlight">sức hút khó cưỡng</span>. 🌑 Kirstin khiến Painelle hoang mang—là một <span class="highlight">kẻ phản diện</span>, hay chỉ đơn thuần là một <span class="highlight">người dẫn đường</span>? 🌑 Kirstin không ép buộc, nhưng mỗi lời nói của cô ta đều đẩy Painelle đến gần một thứ gì đó <span class="highlight">nguy hiểm</span>. 🌑 Kirstin biết quá khứ của Painelle, nhưng cô ta luôn giữ lại những <span class="highlight">bí mật quan trọng nhất</span>. <span class="highlight">Painelle có thể tin tưởng người phụ nữ này không?</span></p><p><span class="highlight">🔞 MỐI QUAN HỆ NGUY HIỂM</span></p><p> Kirstin không phải là một <span class="highlight">người phụ nữ dịu dàng</span> hay <span class="highlight">tốt bụng</span>. Cô ta là một kẻ <span class="highlight">chơi đùa với cảm xúc</span> của Painelle, luôn mỉm cười khi thấy cô bối rối, và luôn biết cách để <span class="highlight">dồn cô vào góc tối nhất trong tâm trí</span>. 💜 "<span class="highlight">Ngươi nghĩ ta là ai, Painelle?</span>" 💜 "<span class="highlight">Là kẻ địch?</span>" 💜 "<span class="highlight">Là một người tình?</span>" 💜 "<span class="highlight">Hay là một điều gì đó còn hơn thế nữa?</span>" <span class="highlight">Painelle không biết—và đó chính là thứ đáng sợ nhất.</span></p><p>Có những khoảnh khắc, Kirstin gần gũi đến mức khiến Painelle <span class="highlight">quên đi mọi thứ</span>. Cô ta <span class="highlight">khiêu khích</span>, <span class="highlight">cám dỗ</span>, nhưng cũng giữ một khoảng cách đủ để khiến Painelle không thể nắm bắt được. 🌑 Nếu Painelle <span class="highlight">chống lại</span> Kirstin, điều gì sẽ xảy ra? 🌑 Nếu cô chọn <span class="highlight">tin tưởng</span> Kirstin, điều gì sẽ chờ đợi phía trước? 🌑 Và nếu cô hoàn toàn <span class="highlight">rơi vào sự kiểm soát</span> của Kirstin… liệu có còn đường quay lại?</p><p><span class="highlight">🌀 NHỮNG LỰA CHỌN SẼ QUYẾT ĐỊNH SỐ PHẬN</span></p>🔮 Painelle có thể <span class="highlight">từ chối</span> Kirstin không? – Hay cô sẽ dần trở thành <span class="highlight">con rối</span> trong tay người phụ nữ này? 🔮 <span class="highlight">Sự thật</span> có đáng để nhớ lại? – Nếu quá khứ chỉ toàn <span class="highlight">đau đớn</span> và <span class="highlight">dối trá</span>, liệu Painelle có còn muốn biết? 🔮 <span class="highlight">Đâu là thực, đâu là ảo giác?</span> – Nếu ký ức là một <span class="highlight">lời nguyền</span>, liệu có cách nào để phá bỏ nó?</p>
+        <p><strong>Nhà Phát Triển Game: </strong><span class="highlight">Captain Sikorsky</span></p>
+        <p><strong>Thể Loại: </strong><span class="highlight">Fantasy, Psychological, Erotic, Dark Narrative, Mystery, Ngực Lớn, Mang Thai</span></p>
+       <p><strong>Ngôn Ngữ Game:</strong> <span class="highlight">Tiếng Anh - Trong Tương Lai sẽ được mod Tiếng Việt 🇻🇳</span></p>
+        </div>
+
+        <!-- English Description -->
+        <div class="description-en">
+<span class="highlight">🖤 KIRSTIN & PAINELLE – THE FATED ENCOUNTER</span>
+<p>Painelle awakens in the middle of a <span class="highlight">desolate forest</span>, with no memory of her <span class="highlight">past</span>. She doesn’t know who she is, doesn’t know <span class="highlight">why</span> she’s here, and the only thing lingering in her mind is a <span class="highlight">strangely familiar</span> name: <span class="highlight">Kirstin</span>.</p>
+
+<p><span class="highlight">It’s not her name.</span></p>
+<p><span class="highlight">It’s not the name of a place.</span></p>
+<p><span class="highlight">It’s a woman—and every instinct tells her she must find her.</span></p>
+
+<p><span class="highlight">💜 Kirstin</span> – A <span class="highlight">mysterious woman</span> with <span class="highlight">piercing violet eyes</span>, a smile both <span class="highlight">sweet</span> and <span class="highlight">dangerous</span>. She is <span class="highlight">unlike anyone</span> Painelle has ever met (or at least, anyone she remembers).</p>
+
+<p>From the <span class="highlight">very first moment</span> she lays eyes on <span class="highlight">Kirstin</span>, <span class="highlight">Painelle</span> feels <span class="highlight">something unusual</span>—an <span class="highlight">unexplainable connection</span>. It’s not <span class="highlight">friendship</span>, nor <span class="highlight">hostility</span>, but something <span class="highlight">deeper</span>, <span class="highlight">darker</span>.</p>
+
+<p><span class="highlight">"Who are you?"</span> – <span class="highlight">Painelle</span> asks, her voice <span class="highlight">slightly trembling</span> for reasons she doesn’t understand.</p>
+<p><span class="highlight">"You know who I am, Painelle."</span> – <span class="highlight">Kirstin</span> replies, her <span class="highlight">smile</span> laced with <span class="highlight">provocation</span>.</p>
+
+<p>But <span class="highlight">Painelle</span> remembers nothing.</p>
+
+<p><span class="highlight">🔥 KIRSTIN’S TEMPTATION – LIGHT OR DARKNESS?</span></p>
+
+<p><span class="highlight">Kirstin</span> is no <span class="highlight">ordinary woman</span>. She is not exactly an <span class="highlight">enemy</span>, but neither is she an <span class="highlight">ally</span>.</p>
+
+<p>She is <span class="highlight">dangerously beautiful</span>, and every time she appears, something inside <span class="highlight">Painelle</span> is drawn to her—like a <span class="highlight">moth to a flame</span>.</p>
+
+<p>💜 "<span class="highlight">You’ve forgotten everything, haven’t you?</span>"  
+💜 "<span class="highlight">I can help you remember… if you want.</span>"</p>
+
+<p>But at what cost?</p>
+
+<p>The closer <span class="highlight">Painelle</span> gets to <span class="highlight">Kirstin</span>, the deeper she falls into an <span class="highlight">inescapable vortex</span>. She cannot discern <span class="highlight">Kirstin’s true intentions</span>, but every word, every gesture, holds an <span class="highlight">irresistible pull</span>.</p>
+
+<p>🌑 <span class="highlight">Kirstin</span> leaves <span class="highlight">Painelle</span> unsettled—is she a <span class="highlight">villain</span>, or simply a <span class="highlight">guide</span>?  
+🌑 <span class="highlight">Kirstin</span> never forces <span class="highlight">Painelle</span>, yet her words always push her toward something <span class="highlight">dangerous</span>.  
+🌑 <span class="highlight">Kirstin</span> knows the truth about <span class="highlight">Painelle’s past</span>—but she keeps the <span class="highlight">most important secrets</span> to herself.</p>
+
+<p><span class="highlight">Can Painelle trust this woman?</span></p>
+
+<p><span class="highlight">🔞 A DANGEROUS RELATIONSHIP</span></p>
+
+<p><span class="highlight">Kirstin</span> is not <span class="highlight">gentle</span> or <span class="highlight">kind</span>. She <span class="highlight">plays with Painelle’s emotions</span>, always smiling at her confusion, always knowing exactly how to <span class="highlight">corner her into the darkest parts of her own mind</span>.</p>
+
+<p>💜 "<span class="highlight">What do you think I am, Painelle?</span>"  
+💜 "<span class="highlight">An enemy?</span>"  
+💜 "<span class="highlight">A lover?</span>"  
+💜 "<span class="highlight">Or something… far beyond that?</span>"</p>
+
+<p><span class="highlight">Painelle doesn’t know—and that’s what terrifies her the most.</span></p>
+
+<p>There are moments when <span class="highlight">Kirstin</span> gets so close that <span class="highlight">Painelle</span> <span class="highlight">forgets everything else</span>. She <span class="highlight">teases</span>, <span class="highlight">tempts</span>, but always keeps just enough distance to remain <span class="highlight">unattainable</span>.</p>
+
+<p>🌑 If <span class="highlight">Painelle</span> <span class="highlight">resists</span> <span class="highlight">Kirstin</span>, what will happen?  
+🌑 If she chooses to <span class="highlight">trust</span> <span class="highlight">Kirstin</span>, what awaits her?  
+🌑 And if she completely <span class="highlight">falls under Kirstin’s control</span>… is there any way back?</p>
+
+<p><span class="highlight">🌀 CHOICES THAT WILL SHAPE HER FATE</span></p>
+
+<p>🔮 Can <span class="highlight">Painelle</span> <span class="highlight">reject</span> <span class="highlight">Kirstin</span>? – Or will she slowly become <span class="highlight">a puppet</span> in her hands?  
+🔮 Is the <span class="highlight">truth</span> worth remembering? – If the past is filled with <span class="highlight">pain</span> and <span class="highlight">lies</span>, does <span class="highlight">Painelle</span> even want to know?  
+🔮 <span class="highlight">What is real, and what is an illusion?</span> – If memories are a <span class="highlight">curse</span>, can they ever be broken?</p>
+         <p>strong>Game Developer: </strong><span class="highlight">Captain Sikorsky</span></p>
+   <p><strong>Genre: </strong><span class="highlight">Fantasy, Psychological, Erotic, Dark Narrative, Mystery, Big Breasts, Pregnancy</span></p>
+            <p><strong>Game Language:</strong> <span class="highlight" id="language">English</span></p>
+        </div>
+
+        <thuvienanh id="gallery-title">Ảnh:</thuvienanh>
+        <div class="gallery">
+            <div class="thumbnail"><img id="gallery-img-1" src="" alt="Ảnh 1"></div>
+            <div class="thumbnail"><img id="gallery-img-2" src="" alt="Ảnh 2"></div>
+            <div class="thumbnail"><img id="gallery-img-3" src="" alt="Ảnh 3"></div>
+            <div class="thumbnail"><img id="gallery-img-4" src="" alt="Ảnh 4"></div>
+            <div class="thumbnail"><img id="gallery-img-5" src="" alt="Ảnh 5"></div>
+            <div class="thumbnail"><img id="gallery-img-6" src="" alt="Ảnh 6"></div>
+            <div class="thumbnail"><img id="gallery-img-7" src="" alt="Ảnh 7"></div>
+            <div class="thumbnail"><img id="gallery-img-8" src="" alt="Ảnh 8"></div>
+            
+        </div>
+
+        <div class="download">
+            <a href="https://pixeldrain.com/u/DrSDQVH2" target="_blank" id="download-link">Tải Game Ngay</a>
+        </div>
+    </div>
+
+    <div class="lightbox" id="lightbox">
+        <span class="close" onclick="closeLightbox()">&#10006;</span>
+        <span class="prev" onclick="prevImage()">&#10094;</span>
+        <img id="lightbox-img" src="" alt="Lightbox">
+        <span class="next" onclick="nextImage()">&#10095;</span>
+    </div>
+
+    <script>
+        const thumbnails = document.querySelectorAll('.thumbnail img');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        let currentIndex = 0;
+
+        thumbnails.forEach((thumbnail, index) => {
+            thumbnail.addEventListener('click', () => {
+                currentIndex = index;
+                openLightbox(thumbnail.src);
+            });
+        });
+
+        function openLightbox(src) {
+            lightboxImg.src = src;
+            lightbox.style.display = 'flex';
+        }
+
+        function closeLightbox() {
+            lightbox.style.display = 'none';
+        }
+
+        function prevImage() {
+            currentIndex = (currentIndex - 1 + thumbnails.length) % thumbnails.length;
+            lightboxImg.src = thumbnails[currentIndex].src;
+        }
+
+        function nextImage() {
+            currentIndex = (currentIndex + 1) % thumbnails.length;
+            lightboxImg.src = thumbnails[currentIndex].src;
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+
+        // Language data
+        const langData = {
+            en: {
+                navTitle: "Menu",
+                register: "Register",
+                login: "Login",
+                logout: "Logout",
+                language: "Language",
+                gameTitle: "Reminiscence",
+                descriptionTitle: "Description:",
+                language: "English",
+                galleryTitle: "Image:",
+                downloadLink: "Download Game Now",
+                introImg: "https://raw.githubusercontent.com/KhuongCodeMaster/BDK2_VNAndEN/refs/heads/main/BDK2_mainEN.jpg",
+                galleryImg1: "https://raw.githubusercontent.com/KhuongCodeMaster/BDK2_VNAndEN/refs/heads/main/BDK2-1EN.jpg",
+                galleryImg2: "https://raw.githubusercontent.com/KhuongCodeMaster/BDK2_VNAndEN/refs/heads/main/BDK2-2EN.jpg",
+                galleryImg3: "https://raw.githubusercontent.com/KhuongCodeMaster/BDK2_VNAndEN/refs/heads/main/BDK2-3EN.jpg",
+                galleryImg4: "https://raw.githubusercontent.com/KhuongCodeMaster/BDK2_VNAndEN/refs/heads/main/BDK2-4EN.jpg",
+                galleryImg5: "https://raw.githubusercontent.com/KhuongCodeMaster/BDK2_VNAndEN/refs/heads/main/BDK2-5EN.jpg",
+                galleryImg6: "https://raw.githubusercontent.com/KhuongCodeMaster/BDK2_VNAndEN/refs/heads/main/BDK2-6EN.jpg",
+                galleryImg7: "https://raw.githubusercontent.com/KhuongCodeMaster/BDK2_VNAndEN/refs/heads/main/BDK2-7EN.jpg",
+                galleryImg8: "https://raw.githubusercontent.com/KhuongCodeMaster/BDK2_VNAndEN/refs/heads/main/BDK2-8EN.jpg"
+            },
+            vi: {
+                navTitle: "Danh Mục",
+                register: "Đăng Ký",
+                login: "Đăng Nhập",
+                logout: "Đăng Xuất",
+                language: "Ngôn Ngữ",
+                gameTitle: "Hồi Tưởng",
+                descriptionTitle: "Mô Tả:",
+                language: "Tiếng Anh",
+                galleryTitle: "Ảnh",
+                downloadLink: "Tải Game Ngay",
+                introImg: "https://raw.githubusercontent.com/KhuongCodeMaster/BDK2_VNAndEN/refs/heads/main/BDK2_mainVN.jpg",
+                galleryImg1: "https://raw.githubusercontent.com/KhuongCodeMaster/BDK2_VNAndEN/refs/heads/main/BDK2-1VN.jpg",
+                galleryImg2: "https://raw.githubusercontent.com/KhuongCodeMaster/BDK2_VNAndEN/refs/heads/main/BDK2-2VN.jpg",
+                galleryImg3: "https://raw.githubusercontent.com/KhuongCodeMaster/BDK2_VNAndEN/refs/heads/main/BDK2-3VN.jpg",
+                galleryImg4: "https://raw.githubusercontent.com/KhuongCodeMaster/BDK2_VNAndEN/refs/heads/main/BDK2-4VN.jpg",
+                galleryImg5: "https://raw.githubusercontent.com/KhuongCodeMaster/BDK2_VNAndEN/refs/heads/main/BDK2-5VN.jpg",
+                galleryImg6: "https://raw.githubusercontent.com/KhuongCodeMaster/BDK2_VNAndEN/refs/heads/main/BDK2-6VN.jpg",
+                galleryImg7: "https://raw.githubusercontent.com/KhuongCodeMaster/BDK2_VNAndEN/refs/heads/main/BDK2-7VN.jpg",
+                galleryImg8: "https://raw.githubusercontent.com/KhuongCodeMaster/BDK2_VNAndEN/refs/heads/main/BDK2-8VN.jpg",
+                galleryImg9: "https://raw.githubusercontent.com/KhuongCodeMaster/BDK2_VNAndEN/refs/heads/main/BDK2-9VN.jpg"
+            }
+        };
+
+        // Apply language
+        function applyLanguage(language) {
+            const data = langData[language];
+            document.getElementById('nav-title').innerText = data.navTitle;
+            document.getElementById('register-link').innerText = data.register;
+            document.getElementById('login-link').innerText = data.login;
+            document.getElementById('logout-link').innerText = data.logout;
+            document.getElementById('game-title').innerText = data.gameTitle;
+            document.getElementById('description-title').innerText = data.descriptionTitle;
+            document.getElementById('language').innerText = data.language;
+            document.getElementById('gallery-title').innerText = data.galleryTitle;
+            document.getElementById('download-link').innerText = data.downloadLink;
+            document.getElementById('intro-img').src = data.introImg;
+            document.getElementById('gallery-img-1').src = data.galleryImg1;
+            document.getElementById('gallery-img-2').src = data.galleryImg2;
+            document.getElementById('gallery-img-3').src = data.galleryImg3;
+            document.getElementById('gallery-img-4').src = data.galleryImg4;
+            document.getElementById('gallery-img-5').src = data.galleryImg5;
+            document.getElementById('gallery-img-6').src = data.galleryImg6;
+            document.getElementById('gallery-img-7').src = data.galleryImg7;
+            document.getElementById('gallery-img-8').src = data.galleryImg8;
+
+            // Toggle descriptions
+            if (language === 'vi') {
+                document.querySelector('.description-vi').style.display = 'block';
+                document.querySelector('.description-en').style.display = 'none';
+            } else {
+                document.querySelector('.description-vi').style.display = 'none';
+                document.querySelector('.description-en').style.display = 'block';
+            }
+
+            // Hide language menu after selection
+            document.getElementById('languageMenu').classList.remove('show');
+        }
+
+        // Set language
+        function setLanguage(language) {
+            localStorage.setItem('language', language);
+            applyLanguage(language);
+        }
+
+        // Toggle menu
+        function toggleMenu() {
+            const menu = document.getElementById('menuDropdown');
+            const hamburger = document.querySelector('.hamburger');
+            menu.classList.toggle('show');
+            hamburger.classList.toggle('active');
+        }
+
+        function toggleLanguageMenu() {
+            const languageMenu = document.getElementById('languageMenu');
+            languageMenu.classList.toggle('show');
+        }
+
+        function logout() {
+            alert("Bạn đã đăng xuất!");
+            localStorage.removeItem('language');
+            window.location.href = "index.html";
+        }
+
+        // Initialize language
+        const currentLang = localStorage.getItem('language') || 'vi';
+        applyLanguage(currentLang);
+    </script>
+</body>
+</html>

@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông Tin Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #1e1e2f, #23232d);
+            color: #e0e0e0;
+        }
+
+        .navbar {
+            background: #007BFF;
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .hamburger {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .hamburger.active {
+            transform: rotate(90deg);
+        }
+
+        .hamburger span {
+            background: white;
+            height: 3px;
+            width: 25px;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .menu-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 10px;
+            background: #333;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .dropdown a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            transition: background 0.3s ease;
+        }
+
+        .dropdown a:hover {
+            background: #444;
+        }
+
+        .language-icon-container {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .language-icon-container:hover {
+            background: #555;
+            color: #ff6600;
+        }
+
+        .language-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .language-menu {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 10px;
+            background: #333;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            z-index: 100;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .language-menu.show {
+            display: block;
+        }
+
+        .language-menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            transition: background 0.3s ease;
+        }
+
+        .language-menu a:hover {
+            background: #444;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        thuvienanh {
+            text-align: center;
+            color: #9400D3;
+            font-size: 22px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        .highlight {
+            color: #00ccff;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .highlight:hover {
+            color: #ff6600;
+            text-shadow: 0px 0px 10px #ff6600;
+        }
+
+        .intro-img {
+            display: block;
+            max-width: 100%;
+            margin: 20px auto;
+            border-radius: 10px;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .thumbnail {
+            position: relative;
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .thumbnail:hover img {
+            transform: scale(1.1);
+        }
+
+        .download {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .download a {
+            color: #ff6600;
+            font-size: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            border: 2px solid #ff6600;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .download a:hover {
+            background: #ff6600;
+            color: #fff;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 80%;
+            border-radius: 10px;
+        }
+
+        .close, .prev, .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 50%;
+        }
+
+        .close {
+            top: 20px;
+            right: 20px;
+            transform: none;
+        }
+
+        .prev {
+            left: 10px;
+        }
+
+        .next {
+            right: 10px;
+        }
+
+        .close:hover, .prev:hover, .next:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Hide English description by default */
+        .description-en {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Thanh điều hướng -->
+    <div class="navbar">
+        <div class="menu-container">
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <span class="menu-title" id="nav-title">Menu</span>
+        </div>
+        <div class="dropdown" id="menuDropdown">
+            <a href="register.html" id="register-link">Register</a>
+            <a href="login.html" id="login-link">Login</a>
+            <a href="#" onclick="logout()" id="logout-link">Logout</a>
+        </div>
+        <div class="language-select">
+            <div class="language-icon-container" onclick="toggleLanguageMenu()">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/globe.png" alt="Language" class="language-icon">
+            </div>
+            <div class="language-menu" id="languageMenu">
+                <a href="#" onclick="setLanguage('vi')">Tiếng Việt</a>
+                <a href="#" onclick="setLanguage('en')">English</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nội dung chính -->
+    <div class="container">
+        <span class="highlight" style="color: bank; font-size: 24px;" id="game-title">Những Ngày Tháng Trụy Lạc Bên Cô Bạn Gái Dịu Dàng</span>
+
+        <img class="intro-img" id="intro-img" src="" alt="Ảnh Intro Game">
+
+        <div style="text-align: center;">
+            <span style="color: crimson; font-size: 24px;" id="description-title">Mô Tả:</span>
+        </div>
+
+        <!-- Vietnamese Description -->
+        <div class="description-vi">
+<p>Bạn bị lạc vào một thế giới nơi những <span class="highlight">người phụ nữ tràn đầy sự dịu dàng</span> nhưng cũng không kém phần <span class="highlight">mê hoặc</span>. Dưới sự chăm sóc của họ, từng ngày trôi qua lại trở nên <span class="highlight">ngọt ngào, trụy lạc</span> hơn bao giờ hết. Nhưng liệu tất cả chỉ đơn thuần là <span class="highlight">tình yêu</span>, hay còn có những <span class="highlight">bí ẩn ẩn giấu</span> phía sau?</p>
+
+<p>Hãy tận hưởng <span class="highlight">sự cám dỗ</span> của những người phụ nữ mang trong mình sự <span class="highlight">ấm áp của một người mẹ</span>, nhưng cũng biết cách <span class="highlight">kiểm soát mọi khoái cảm</span> của bạn. Từng <span class="highlight">ánh mắt</span>, từng <span class="highlight">cử chỉ</span> đều có thể khiến bạn đắm chìm vào vòng tay họ mà <span class="highlight">không còn lối thoát</span>.</p>
+
+<p>Sự lựa chọn là của bạn—<span class="highlight">chống lại</span> hay <span class="highlight">buông mình theo dục vọng</span>?</p>
+         <p><strong>Nhà Phát Triển Game: </strong><span class="highlight">latte art</span></p>
+     <p><strong>Thể Loại: </strong><span class="highlight">Fantasy, Psychological, Erotic, Mystery, Romance</span></p>
+            <p><strong>Ngôn Ngữ:</strong> <span class="highlight">Tiếng Anh - Tỷ lệ được mod tiếng Việt Trong Tương Lai 100%</span></p>
+        </div>
+
+        <!-- English Description -->
+        <div class="description-en">
+<p>You find yourself lost in a world where <span class="highlight">women radiate warmth and tenderness</span>, yet they also possess an <span class="highlight">irresistible allure</span>. Each passing day under their care becomes <span class="highlight">sweeter and more indulgent</span> than ever. But is this truly <span class="highlight">love</span>, or are there <span class="highlight">hidden secrets</span> lurking beneath?</p>
+
+<p>Surrender to the <span class="highlight">temptations</span> of women who embody <span class="highlight">maternal warmth</span>, yet know exactly how to <span class="highlight">control your deepest desires</span>. Every <span class="highlight">glance</span>, every <span class="highlight">gesture</span> draws you further into their embrace, leaving you <span class="highlight">with no escape</span>.</p>
+
+<p>The choice is yours—<span class="highlight">resist</span>, or <span class="highlight">surrender to pleasure</span>?</p>
+          <p><strong>Game Developer: </strong><span class="highlight">latte art</span></p>
+            <p><strong>Genre:</strong> <span class="highlight">Fantasy, RPG, Adventure, Puzzle, Romance, Erotica, Choice-based, Dark Mystery, Visual Novel 18+</span></p>
+            <p><strong>Game Language:</strong> <span class="highlight" id="language">English</span></p>
+        </div>
+
+        <thuvienanh id="gallery-title">Ảnh:</thuvienanh>
+        <div class="gallery">
+            <div class="thumbnail"><img id="gallery-img-1" src="" alt="Ảnh 1"></div>
+            <div class="thumbnail"><img id="gallery-img-2" src="" alt="Ảnh 2"></div>
+            <div class="thumbnail"><img id="gallery-img-3" src="" alt="Ảnh 3"></div>
+            <div class="thumbnail"><img id="gallery-img-4" src="" alt="Ảnh 4"></div>
+            <div class="thumbnail"><img id="gallery-img-5" src="" alt="Ảnh 5"></div>
+        </div>
+
+        <div class="download">
+            <a href="https://pixeldrain.com/u/DrSDQVH2" target="_blank" id="download-link">Tải Game Ngay</a>
+        </div>
+    </div>
+
+    <div class="lightbox" id="lightbox">
+        <span class="close" onclick="closeLightbox()">&#10006;</span>
+        <span class="prev" onclick="prevImage()">&#10094;</span>
+        <img id="lightbox-img" src="" alt="Lightbox">
+        <span class="next" onclick="nextImage()">&#10095;</span>
+    </div>
+
+    <script>
+        const thumbnails = document.querySelectorAll('.thumbnail img');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        let currentIndex = 0;
+
+        thumbnails.forEach((thumbnail, index) => {
+            thumbnail.addEventListener('click', () => {
+                currentIndex = index;
+                openLightbox(thumbnail.src);
+            });
+        });
+
+        function openLightbox(src) {
+            lightboxImg.src = src;
+            lightbox.style.display = 'flex';
+        }
+
+        function closeLightbox() {
+            lightbox.style.display = 'none';
+        }
+
+        function prevImage() {
+            currentIndex = (currentIndex - 1 + thumbnails.length) % thumbnails.length;
+            lightboxImg.src = thumbnails[currentIndex].src;
+        }
+
+        function nextImage() {
+            currentIndex = (currentIndex + 1) % thumbnails.length;
+            lightboxImg.src = thumbnails[currentIndex].src;
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+
+        // Language data
+        const langData = {
+            en: {
+                navTitle: "Menu",
+                register: "Register",
+                login: "Login",
+                logout: "Logout",
+                language: "Language",
+                gameTitle: "Eliza's Secret Potion",
+                descriptionTitle: "Description:",
+                language: "English",
+                galleryTitle: "Image:",
+                downloadLink: "Download Game Now",
+                introImg: "https://raw.githubusercontent.com/KhuongCodeMaster/B-n-g-i-c-a-m-v-nh-ng-ng-y-d-m-d-c/refs/heads/main/BGCMVNGDDCM_mainVNandEN.jpg",
+                galleryImg1: "https://raw.githubusercontent.com/KhuongCodeMaster/B-n-g-i-c-a-m-v-nh-ng-ng-y-d-m-d-c/refs/heads/main/BGCMVNGDDCM_1EN.jpg",
+                galleryImg2: "https://raw.githubusercontent.com/KhuongCodeMaster/B-n-g-i-c-a-m-v-nh-ng-ng-y-d-m-d-c/refs/heads/main/BGCMVNGDDCM_2EN.jpg",
+                galleryImg3: "https://raw.githubusercontent.com/KhuongCodeMaster/B-n-g-i-c-a-m-v-nh-ng-ng-y-d-m-d-c/refs/heads/main/BGCMVNGDDCM_3EN.jpg",
+                galleryImg4: "https://raw.githubusercontent.com/KhuongCodeMaster/B-n-g-i-c-a-m-v-nh-ng-ng-y-d-m-d-c/refs/heads/main/BGCMVNGDDCM_4EN.jpg",
+                galleryImg5: "https://raw.githubusercontent.com/KhuongCodeMaster/B-n-g-i-c-a-m-v-nh-ng-ng-y-d-m-d-c/refs/heads/main/BGCMVNGDDCM_5EN.jpg",
+            },
+            vi: {
+                navTitle: "Danh Mục",
+                register: "Đăng Ký",
+                login: "Đăng Nhập",
+                logout: "Đăng Xuất",
+                language: "Ngôn Ngữ",
+                gameTitle: "Những Ngày Tháng Trụy Lạc Bên Cô Bạn Gái Dịu Dàng",
+                descriptionTitle: "Mô Tả:",
+                language: "Tiếng Anh",
+                galleryTitle: "Ảnh",
+                downloadLink: "Tải Game Ngay",
+                introImg: "https://raw.githubusercontent.com/KhuongCodeMaster/B-n-g-i-c-a-m-v-nh-ng-ng-y-d-m-d-c/refs/heads/main/BGCMVNGDDCM_mainVNandEN.jpg",
+                galleryImg1: "https://raw.githubusercontent.com/KhuongCodeMaster/B-n-g-i-c-a-m-v-nh-ng-ng-y-d-m-d-c/refs/heads/main/BGCMVNGDDCM_1VN.jpg",
+                galleryImg2: "https://raw.githubusercontent.com/KhuongCodeMaster/B-n-g-i-c-a-m-v-nh-ng-ng-y-d-m-d-c/refs/heads/main/BGCMVNGDDCM_2VN.jpg",
+                galleryImg3: "https://raw.githubusercontent.com/KhuongCodeMaster/B-n-g-i-c-a-m-v-nh-ng-ng-y-d-m-d-c/refs/heads/main/BGCMVNGDDCM_3VN.jpg",
+                galleryImg4: "https://raw.githubusercontent.com/KhuongCodeMaster/B-n-g-i-c-a-m-v-nh-ng-ng-y-d-m-d-c/refs/heads/main/BGCMVNGDDCM_4VN.jpg",
+                galleryImg5: "https://raw.githubusercontent.com/KhuongCodeMaster/B-n-g-i-c-a-m-v-nh-ng-ng-y-d-m-d-c/refs/heads/main/BGCMVNGDDCM_5VN.jpg"
+            }
+        };
+
+        // Apply language
+        function applyLanguage(language) {
+            const data = langData[language];
+            document.getElementById('nav-title').innerText = data.navTitle;
+            document.getElementById('register-link').innerText = data.register;
+            document.getElementById('login-link').innerText = data.login;
+            document.getElementById('logout-link').innerText = data.logout;
+            document.getElementById('game-title').innerText = data.gameTitle;
+            document.getElementById('description-title').innerText = data.descriptionTitle;
+            document.getElementById('language').innerText = data.language;
+            document.getElementById('gallery-title').innerText = data.galleryTitle;
+            document.getElementById('download-link').innerText = data.downloadLink;
+            document.getElementById('intro-img').src = data.introImg;
+            document.getElementById('gallery-img-1').src = data.galleryImg1;
+            document.getElementById('gallery-img-2').src = data.galleryImg2;
+            document.getElementById('gallery-img-3').src = data.galleryImg3;
+            document.getElementById('gallery-img-4').src = data.galleryImg4;
+            document.getElementById('gallery-img-5').src = data.galleryImg5;
+
+            // Toggle descriptions
+            if (language === 'vi') {
+                document.querySelector('.description-vi').style.display = 'block';
+                document.querySelector('.description-en').style.display = 'none';
+            } else {
+                document.querySelector('.description-vi').style.display = 'none';
+                document.querySelector('.description-en').style.display = 'block';
+            }
+
+            // Hide language menu after selection
+            document.getElementById('languageMenu').classList.remove('show');
+        }
+
+        // Set language
+        function setLanguage(language) {
+            localStorage.setItem('language', language);
+            applyLanguage(language);
+        }
+
+        // Toggle menu
+        function toggleMenu() {
+            const menu = document.getElementById('menuDropdown');
+            const hamburger = document.querySelector('.hamburger');
+            menu.classList.toggle('show');
+            hamburger.classList.toggle('active');
+        }
+
+        function toggleLanguageMenu() {
+            const languageMenu = document.getElementById('languageMenu');
+            languageMenu.classList.toggle('show');
+        }
+
+        function logout() {
+            alert("Bạn đã đăng xuất!");
+            localStorage.removeItem('language');
+            window.location.href = "index.html";
+        }
+
+        // Initialize language
+        const currentLang = localStorage.getItem('language') || 'vi';
+        applyLanguage(currentLang);
+    </script>
+</body>
+</html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unified Code</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+        }
+
+        .navbar {
+            background: #007BFF;
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .hamburger {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .hamburger.active {
+            transform: rotate(90deg);
+        }
+
+        .hamburger span {
+            background: white;
+            height: 3px;
+            width: 25px;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 10px;
+            background: #333;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            z-index: 100;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .dropdown a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            transition: background 0.3s ease;
+        }
+
+        .dropdown a:hover {
+            background: #444;
+        }
+
+        .dropdown.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .language-icon-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .language-icon {
+            width: 30px;
+            height: 30px;
+        }
+
+        .language-menu {
+            display: none;
+            background: #444;
+            padding: 10px;
+            border-radius: 5px;
+            position: absolute;
+            top: 50px;
+            right: 10px;
+            z-index: 100;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .language-menu.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .language-menu a {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            display: block;
+            transition: background 0.3s ease;
+        }
+
+        .language-menu a:hover {
+            background: #555;
+        }
+
+        .menu-container {
+            display: flex;
+            align-items: center;
+            gap: 20px; /* Tạo không gian giữa các mục */
+        }
+
+        .game-item {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .game-link {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .game-link img {
+            width: 100%;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .game-link:hover img {
+            transform: scale(1.05);
+        }
+
+        .image-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .text-overlay {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 5px 10px;
+            border-radius: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+           .text-overlay2 {
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 5px 10px;
+    border-radius: 5px;
+    white-space: normal; /* Cho phép xuống dòng */
+    word-wrap: break-word; /* Chữ tự động xuống dòng khi quá dài */
+    max-width: 90%; /* Giới hạn độ rộng để không tràn ảnh */
+}
+        
+    </style>
+</head>
+<body>
+    <!-- Thanh điều hướng -->
+    <div class="navbar">
+        <div class="menu-container">
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <span id="nav-title">Menu</span>
+        </div>
+        <div class="dropdown" id="menuDropdown">
+            <a href="register.html" id="register-link">Register</a>
+            <a href="login.html" id="login-link">Login</a>
+            <a href="#" onclick="logout()" id="logout-link">Logout</a>
+        </div>
+        <div class="language-icon-container" onclick="toggleLanguageMenu()">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/globe.png" alt="Language" class="language-icon">
+        </div>
+        <div class="language-menu" id="languageMenu">
+            <a href="#" onclick="setLanguage('vi')">Tiếng Việt</a>
+            <a href="#" onclick="setLanguage('en')">English</a>
+        </div>
+    </div>
+
+    <!-- Nội dung chính -->
+    <div class="content">
+        <h1 id="content-title">Game List</h1>
+
+        <!-- Game 1 -->
+        <div class="game-item">
+            <a href="Eliza's Secret Potion.html" class="game-link">
+                <div class="image-container">
+                    <img src="https://raw.githubusercontent.com/KhuongCodeMaster/Eliza-s-Secret-PotionVNandEN/refs/heads/main/EPSMAINVN.png" alt="Eliza's Secret Potion">
+                    <div class="text-overlay" id="game1-title">Eliza's Secret Potion</div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Game 2 -->
+        <div class="game-item">
+            <a href="War Demon Kirstin.html" class="game-link">
+                <div class="image-container">
+                    <img src="https://raw.githubusercontent.com/KhuongCodeMaster/War-Demon-KirstinVNANDEN/refs/heads/main/WDKmainVN.jpg" alt="War Demon Kirstin">
+                    <div class="text-overlay" id="game2-title">War Demon Kirstin</div>
+                </div>
+            </a>
+        </div>
+        <!-- Game 3 -->
+        <div class="game-item">
+            <a href="Reminiscence.html" class="game-link">
+                <div class="image-container">
+                    <img src="https://raw.githubusercontent.com/KhuongCodeMaster/BDK2_VNAndEN/refs/heads/main/BDK2_mainVN.jpg"" alt="War Demon Kirstin">
+                    <div class="text-overlay" id="game3-title">Hồi Tưởng</div>
+    </div>
+   </a>
+   </div>
+           <!-- Game 4 -->
+        <div class="game-item">
+            <a href="Eliza's Secret Potion.html" class="game-link">
+                <div class="image-container">
+                    <img src="https://raw.githubusercontent.com/KhuongCodeMaster/SWI1/refs/heads/main/RJ01324212_img_main.jpg" alt="Eliza's Secret Potion">
+                    <div class="text-overlay" id="game4-title">Một con lợn nái đã thụ thai phần 1</div>
+                </div>
+                </a>
+              </div>
+                <!-- Game 5 -->
+        <div class="game-item">
+            <a href="Bạn Gái Ảo Múp Rụp.html" class="game-link">
+                <div class="image-container">
+                    <img src="https://raw.githubusercontent.com/KhuongCodeMaster/BGAMR_VNandEN/refs/heads/main/BGAM_mainVN.jpg" alt="War Demon Kirstin">
+                    <div class="text-overlay2" id="game5-title">Tuân lệnh dẫn đến khoái lạc! Tôi đã sử dụng khả năng gian lận phục tùng của mình để biến một đấu sĩ ưu tú mũm mĩm thành bạn gái của tôi ♪</div>
+           </div>
+          </a>
+        </div>
+              <!-- Game 6 -->
+        <div class="game-item">
+            <a href="Cô Bạn Gái Đãm Đan Và Những Ngày Đồ Trụy Cùng Bạn Gái Của Tôi.html" class="game-link">
+                <div class="image-container">
+                    <img src="https://raw.githubusercontent.com/KhuongCodeMaster/B-n-g-i-c-a-m-v-nh-ng-ng-y-d-m-d-c/refs/heads/main/BGCMVNGDDCM_mainVNandEN.jpg" alt="War Demon Kirstin">
+                    <div class="text-overlay2" id="game6-title">Những Ngày Tháng Trụy Lạc Bên Cô Bạn Gái Dịu Dàng</div>
+    <script>
+        // Lấy ngôn ngữ từ localStorage hoặc mặc định là 'vi'
+        const currentLang = localStorage.getItem('language') || 'vi';
+
+        // Dữ liệu ngôn ngữ
+        const langData = {
+            en: {
+                navTitle: "Menu",
+                register: "Register",
+                login: "Login",
+                logout: "Logout",
+                title: "Game List",
+                games: ["Eliza's Secret Potion","War Demon Kirstin","Reminiscence","Slutty Wife, Impregnated 1","Obedience Leads to Pleasure! I used my cheat submission ability to turn a plump elite fighter into my girlfriend ♪","Debaucherous Days with My Gentle Girlfriend"]
+            },
+            vi: {
+                navTitle: "Danh Mục",
+                register: "Đăng Ký",
+                login: "Đăng Nhập",
+                logout: "Đăng Xuất",
+                title: "Danh Sách Game",
+                games: ["Thuốc Bí Mật của Eliza","Quỷ Chiến Tranh Kirstin","Hồi Tưởng","Một con lợn nái đã thụ thai phần 1","Tuân lệnh dẫn đến khoái lạc! Tôi đã sử dụng khả năng gian lận phục tùng của mình để biến một đấu sĩ ưu tú mũm mĩm thành bạn gái của tôi ♪","Những Ngày Tháng Trụy Lạc Bên Cô Bạn Gái Dịu Dàng"]
+            }
+        };
+
+        // Cập nhật ngôn ngữ
+        function applyLanguage(language) {
+            const data = langData[language];
+            document.getElementById('nav-title').innerText = data.navTitle;
+            document.getElementById('register-link').innerText = data.register;
+            document.getElementById('login-link').innerText = data.login;
+            document.getElementById('logout-link').innerText = data.logout;
+            document.getElementById('content-title').innerText = data.title;
+            document.getElementById('game1-title').innerText = data.games[0];
+            document.getElementById('game2-title').innerText = data.games[1];
+            document.getElementById('game3-title').innerText = data.games[2];
+            document.getElementById('game4-title').innerText = data.games[3];
+            document.getElementById('game5-title').innerText = data.games[4];
+            document.getElementById('game6-title').innerText = data.games[5];
+        }
+
+        // Đổi ngôn ngữ
+        function setLanguage(language) {
+            localStorage.setItem('language', language);
+            applyLanguage(language);
+        }
+
+        // Hiện/ẩn menu
+        function toggleMenu() {
+            const menu = document.getElementById('menuDropdown');
+            menu.classList.toggle('show');
+            document.querySelector('.hamburger').classList.toggle('active');
+        }
+
+        // Hiện/ẩn menu ngôn ngữ
+        function toggleLanguageMenu() {
+            const languageMenu = document.getElementById('languageMenu');
+            languageMenu.classList.toggle('show');
+        }
+
+        // Đăng xuất
+        function logout() {
+            alert("Bạn đã đăng xuất!");
+            localStorage.removeItem('language');
+            window.location.href = "index.html";
+        }
+
+        // Khởi tạo ngôn ngữ
+        applyLanguage(currentLang);
+    </script>
+</body>
+</html>
